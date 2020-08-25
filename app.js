@@ -5,6 +5,8 @@ const morgan = require('morgan')
 const bodyParser = require('body-parser');
 const authRoutes = require('./routes/auth')
 const userRoutes = require('./routes/user')
+const categoryRoutes = require('./routes/category')
+const productRoutes = require('./routes/product')
 const cors = require('cors')
 require('dotenv').config()
 mongoose.connect(process.env.MONGO_URI, {useNewUrlParser: true, useUnifiedTopology: true ,useFindAndModify:false,useCreateIndex:true})
@@ -23,6 +25,8 @@ app.use(morgan('dev'))
 
 app.use('/v',authRoutes)
 app.use('/v',userRoutes)
+app.use('/v',categoryRoutes)
+app.use('/v',productRoutes)
 
 const port = process.env.PORT||8000;
 app.listen(port,()=>{console.log(`server started on port:${port}`)})
