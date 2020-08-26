@@ -12,3 +12,22 @@ exports.userById = (req,res,next,id) =>{
     })
 
 }
+exports.updateUser =(req,res) =>{
+    User.findOneAndUpdate({_id:req.profile._id},{$set:req.body},{new:true},(err,user)=>{
+        if(err){
+            return res.status(400).json({
+                error:"you are not authorized"
+            })
+        }
+        user.hashed_password = undefined
+        user.salt =undefined
+        res.json(user)
+    })
+
+}
+exports.getUser =(req,res) =>{
+    req.profile.hashed_password = undefined
+    req.profile.salt = undefined
+    return res.json(req.profile)
+    
+}

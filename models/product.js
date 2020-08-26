@@ -21,7 +21,7 @@ const {ObjectId} = mongoose.Schema
     },
     category:{
         type:ObjectId,
-        ref:"Catgory",
+        ref:"Category",
         required:true,
         
     },
@@ -31,8 +31,11 @@ const {ObjectId} = mongoose.Schema
     },
     quantity:{
         type:Number,
-        trim:true,
-        required:true
+       
+    },
+    sold:{
+        type:Number,
+        default:0
     },
     shipping:{
         required:false,

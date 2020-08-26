@@ -1,14 +1,11 @@
 const express = require('express')
 
 const {checkToken,authAdminUser,authregUser} = require('../controllers/auth.js')
-const {userById} = require('../controllers/user.js')
+const {userById,getUser,updateUser} = require('../controllers/user.js')
 
 const router = express.Router();
-router.get('/secret/:userId',checkToken,authregUser,(req,res)=>{
-    res.json({
-        user:req.profile
-    })
-})
+router.get('/user/:userId',checkToken,authregUser,getUser)
+router.put('/user/:userId',checkToken,authregUser,updateUser)
 router.param("userId",userById)
   
 
