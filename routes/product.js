@@ -2,13 +2,14 @@ const express = require('express')
 
 const {checkToken,authAdminUser,authregUser} = require('../controllers/auth.js')
 const {createProduct,productById,singleProduct,deleteProduct,updateProduct,list,relatedProducts,
-    listCategories,listBySearch,photo} = require('../controllers/product.js')
+    listCategories,listBySearch,photo,searchedList} = require('../controllers/product.js')
 const {userById} = require('../controllers/user.js')
 
 const router = express.Router();
 router.get('/products',list)
 router.get('/products/related/:productId', relatedProducts)
 router.get('/products/categories', listCategories)
+router.get('/products/search', searchedList)
 router.get('/product/:productId', singleProduct)
 router.get('/product/photo/:productId',photo)
 router.delete('/product/delete/:productId/:userId', checkToken,authregUser,deleteProduct)

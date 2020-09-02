@@ -6,7 +6,7 @@ const { errorHandler } = require('../helpers/dberrorHandler')
 
 
 exports.productById =(req,res,next,id) =>{
-    Product.findById(id).exec((err,prod) =>{
+    Product.findById(id).populate('category').exec((err,prod) =>{
         if(err){
             return res.status(400).json({
                 error:'product not found'
@@ -176,11 +176,11 @@ exports.listCategories = (req,res) =>{
 exports.listBySearch = (req, res) => {
     let order = req.body.order ? req.body.order : "desc";
     let sortBy = req.body.sortBy ? req.body.sortBy : "_id";
-    let limit = req.body.limit ? parseInt(req.body.limit) : 100;
+    let limit = req.body.limit ? parseInt(req.body.limit) : 8;
     let skip = parseInt(req.body.skip);
     let findArgs = {};
  
-    // console.log(order, sortBy, limit, skip, req.body.filters);
+    // console.log(order, sortBy, limit, skip, req.body.filters)-
     // console.log("findArgs", findArgs);
  
     for (let key in req.body.filters) {
@@ -222,4 +222,21 @@ exports.photo = (req,res,next) =>{
         return res.send(req.product.photo.data)
     }
     next()
+}
+ exports.searchedList =  (req,res) =>{
+    const query = {}
+    if(req.query.search){
+        query.name= {$regex: req.query.search, $options:'i'}
+        if(req.query.category && req.query.category != 'All'){
+            query.category = req.query.category
+        }
+        Product.find(query,(err,p) =>{
+            if(err){
+                res.status(400).json({
+                    error:errorHandler(err)
+                })
+            }
+            res.json(p)
+        }).select('-photo')
+    }
 }
