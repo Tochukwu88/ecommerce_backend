@@ -1,12 +1,54 @@
-exports.create = (req,res) =>{
-    const donations = [
-        {amount:100,amount:200,amount:300
-            
+const {Order , CartItem } = require('../models/order')
+const { errorHandler } = require('../helpers/dberrorHandler')
+const { populate } = require('../models/user')
+
+exports.orderById =(req,res,next,id) =>{
+    Order.findById(id).populate('products.product','name price').exec((err,order)=>{
+        if(err){
+            return res.status(400).json({
+                error:errorHandler(err)
+            })
         }
-    ]
-    const dd = donations.map((a,i)=>{
-        return (
-            console.log(a.amount * 2)
-        )
+       req.order = order
+       next()
+    })
+}
+exports.create = (req,res) =>{
+    req.body.order.user = req.profile
+    const order = new Order(req.body.order)
+    order.save((err,data) =>{
+        if(err){
+            return res.status(400).json({
+                error:errorHandler(err)
+            })
+        }
+        res.json(data)
+    })
+}
+exports.listOrders = (req,res)=>{
+    Order.find()
+    .populate('user', '_id name address')
+    .sort('-created')
+    .exec((err,orders)=>{
+        if(err){
+            return res.status(400).json({
+                error:errorHandler(err)
+            })
+        }
+        res.json(orders)
+
+    })
+}
+exports.getStatusValues =(req,res) =>{
+    res.json(Order.schema.path('status').enumValues)
+}
+exports.opdateOrderStatus = (req,res) =>{
+    Order.update({_id:req.body.orderId},{$set:{status:req.body.status}},(err,order)=>{
+        if(err){
+            return res.status(400).json({
+                error:errorHandler(err)
+            })
+        }
+        res.json(order)
     })
 }
