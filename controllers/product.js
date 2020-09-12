@@ -94,12 +94,12 @@ exports.updateProduct = (req,res) =>{
                 error:'Image could not be uploaded'
             })
         }
-        const {name,description,price,quantity,shipping,category} = fields
-        if(!name || !description || !price || !quantity || !shipping || !category){
-            return res.status(400).json({
-                error:"all fields are required"
-            })
-        }
+        // const {name,description,price,quantity,shipping,category} = fields
+        // if(!name || !description || !price || !quantity || !shipping || !category){
+        //     return res.status(400).json({
+        //         error:"all fields are required"
+        //     })
+        // }
         let product = req.product
         product = _.extend(product,fields)
 
